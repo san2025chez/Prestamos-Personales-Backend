@@ -1,0 +1,62 @@
+image: docker:latest
+services:
+  - docker:19.03.1-dind
+stages:
+- build
+- push
+- deploy_staging
+- deploy_production
+variables:
+  ZAZ_TAG_NAME: registry.gitlab.com/nodku/comprartir/comprartir-backend:$CI_COMMIT_SHA
+before_script:
+  - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
+
+build:server:
+  artifacts:
+    paths:
+      - docker-images
+  stage: build
+  script:
+    - mkdir docker-images
+    - docker build --pull -t $ZAZ_TAG_NAME .
+    - docker save $ZAZ_TAG_NAME > docker-images/app.tar
+  only:
+    - master
+    - staging
+
+push:server:
+  stage: push
+  script:
+    - docker load -i docker-images/app.tar
+    - docker push $ZAZ_TAG_NAME
+  only:
+    - master
+    - staging
+
+deploy_staging:server:
+  stage: deploy_staging
+  dependencies: []
+  tags:
+    - comprartir-back-staging
+  script:
+    - cd /home/gitlab-runner/comprartir-deployer
+    - chmod u+x deploy-backend.sh
+    - ./deploy-backend.sh $CI_COMMIT_SHA
+  environment: staging
+  only:
+    - staging
+  when: on_success
+
+deploy_production:server:
+  stage: deploy_production
+  dependencies: []
+  tags:
+    - back-prod
+  script:
+    - cd /home/gitlab-runner/comprartir-deployer
+    - chmod u+x deploy-backend.sh
+    - ./deploy-backend.sh $CI_COMMIT_SHA
+  environment: production
+  only:
+    - master
+  when: manual
