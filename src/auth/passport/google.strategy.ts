@@ -8,7 +8,7 @@ import { UsersService } from '../../users/user.service';
 const CLIENT_ID = '32078188478-467qmu7rurm96q4q2k9r0hbhqter6uvo.apps.googleusercontent.com';
 const CLIENT_SECRET = 'QlBW-C3XYmcuAJR7C0ibddBM';
 const CALLBACKURL = process.env.NODE_ENV === 'production' ?
-    'https://api.comprartir-staging.tk/auth/google/callback/v1' :
+    '' :
     'http://localhost:3000/api/v1/auth/google/callback';
 
 @Injectable()

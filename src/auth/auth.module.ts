@@ -13,40 +13,23 @@ import { GoogleStrategy } from './passport/google.strategy';
 import { RolsService } from '../rols/rols.service';
 import { RolsModule } from '../rols/rols.module';
 import { CodeModule } from '../code/code.module';
-import { MailerNestModule } from '../mailer/mailer.module';
-import { MailerService, MailerModule, HandlebarsAdapter } from '@nest-modules/mailer';
-import config from '../mailer/config';
-const mail = config.USER;
-const password = config.PASSWORD;
-const mailProvider = '@smtp.gmail.com';
+
+
+
 
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User]), MailerModule.forRoot({
-      transport: 'smtps://' + mail + ':' + password + mailProvider,
-      /*  transport: { host: mailProvider, port:  Number(587),
-       auth: { user: mail, pass: password }}, */
-      defaults: {
-        from: '"nest-modules" <modules@nestjs.com>',
-      },
-      template: {
-        dir: __dirname + '../email-templates',
-        adapter: new HandlebarsAdapter(), // or new PugAdapter()
-        options: {
-          strict: true,
-        },
-      },
-    }),
+    TypeOrmModule.forFeature([User]), 
     UsersModule,
     RolsModule,
     /* CustomersModule,
     SellerModule, */
     PassportModule,
     CodeModule,
-    MailerNestModule,
+
     JwtModule.register({
-      secret: 'Comprartir',
+      secret: 'pepito',
       signOptions: { expiresIn: 3600 },
     }),
   ],

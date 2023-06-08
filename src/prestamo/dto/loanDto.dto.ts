@@ -4,15 +4,15 @@ import { User } from "../../users/user.entity";
 export class LoanDto {
     @ApiProperty({ description: 'id user' })
     readonly user: User;
-    @ApiProperty({ description: 'id user' })
+    @ApiProperty({ description: 'monto' })
     readonly monto: number;
-    @ApiProperty({ description: 'id user' })
+    @ApiProperty({ description: 'interes' })
     readonly interes: number;
-    @ApiProperty({ description: 'id user' })
+    @ApiProperty({ description: 'montoTotal' })
     readonly montoTotal: number;
-    @ApiProperty({ description: 'id user' })
+    @ApiProperty({ description: 'prenda' })
     readonly prenda: string; 
-    @ApiProperty({ description: 'id user' })
+    @ApiProperty({ description: 'description' })
     readonly descripcion: string;
 
   

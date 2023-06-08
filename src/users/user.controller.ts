@@ -256,11 +256,8 @@ export class UsersController {
 
         }
 
-        /*    console.log('llega: ', updateUserDto);
-
-        let response = await this.service.create(param.id, updateUserDto);
-        return res.status(HttpStatus.OK).json(response); */
+       
     }
 
-    // console.log('commerce update: ', commerce);
+
 }

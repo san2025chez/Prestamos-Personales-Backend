@@ -81,11 +81,6 @@ export class User {
   barrio: string;
   @Column('varchar', { length: 500, nullable: true })
   numero: string;
-  /* @OneToOne(() => Customer, (customer: Customer) => customer.user)
-  customer: Customer; */
-
-  /*  @OneToOne(() => Seller, (seller: Seller) => seller.user)
-   seller: Seller; */
    
   @ManyToMany(() => Rols, (rol: Rols) => rol.users)
   @JoinTable({
@@ -101,12 +96,7 @@ export class User {
 
  @OneToMany(type => Prestamo, (prestamo: Prestamo) => prestamo.user)
   prestamo: Prestamo;
- /* 
-  @OneToMany(type => Commision, commision => commision.user)
-  commisions: Commision[];
-  user: any; */
-  /*  customer: any;
-   seller: any; */
+
 
 
   @BeforeInsert()

@@ -18,16 +18,10 @@ export class UsersService extends TypeOrmCrudService<User> {
   }
 
   public getAllUsers = async (): Promise<any[]> => {
-    /*  return await this.repo.find({ relations: ['seller', 'customer', 'rols'] }); */
     return await this.repo.find({ relations: ['rols'] });
-
   }
 
-  /*   public getUserById = async (id: string): Promise<any> => {
-      return await this.repo.findOne(id, { relations: ['rols', 'commisions'] }); */
-  /*   return await this.repo.findOne(id, { relations: ['seller', 'customer', 'rols'] }); */
-  //}
-  /*-------------------------------------------------------------------- */
+
   public async getUsuarioById(id: string): Promise<any> {
     console.log('ido user service: ', id);
     let usuario = await this.repo.findOne(id, { relations: ['rols'] });
@@ -35,10 +29,6 @@ export class UsersService extends TypeOrmCrudService<User> {
 
     return usuario;
   }
-
-  /*-------------------------------------------------------------------- */
-
-
 
   public getUserValidateToken = async (id: string): Promise<any> => {
     return await this.repo.findOne(id, { relations: ['rols'] });
@@ -106,19 +96,13 @@ export class UsersService extends TypeOrmCrudService<User> {
 
     try {
       const user = await this.repo.findOne({ where: { email: login.email }, });
-      //const user2 = await this.repo.findOne({ nickName: login.nickName });
-      // console.log('user con nick enconatrad', user2);
+      
 
       if (user) {
         const pass = await user.comparePassword(login.password);
-        /* const nick = await user.compareNickname(login.nickName)
-        console.log("mi nick es:", nick);
- */
+
         if (pass) {
 
-          console.log("nuevo user", user);
-
-          // tslint:disable-next-line: object-literal-shorthand
           return { success: true, user: user };
         } else {
           return { success: pass, user: null };
@@ -168,12 +152,9 @@ export class UsersService extends TypeOrmCrudService<User> {
     }
     try {
       userDto.rols = [];
-      // userDto.rols = ({ name: 'customer' })        //       userDto.rols.push();
+
       user = this.repo.create(userDto);
       console.log(user.rols);
-
-      //user.rols.push();
-
       return await this.repo.save(user);
     } catch (error) {
       console.log('error: ', error);
@@ -185,10 +166,7 @@ export class UsersService extends TypeOrmCrudService<User> {
     console.log("entro a registrar", userDto);
 
     try {
-      
-      
       userDto.rols = [];
-      // userDto.rols = ({ name: 'customer' })        //       userDto.rols.push();
      let  user = this.repo.create(userDto);
       console.log("el USER CREADO ES ",user);
 
@@ -231,8 +209,6 @@ export class UsersService extends TypeOrmCrudService<User> {
   //-----------------------------------------
   public async updateCliente(userDto: ClienteDto, rolDto: any) {
     const user = await this.repo.findOne({ where: { id: userDto.id}, relations: ['rols'] });
-    console.log("comprobando los tipos de roles");
-
     console.log(user.rols);
     console.log(rolDto);
     if (user.rols.find(role => (role.name === "customer"))) {
@@ -245,21 +221,9 @@ export class UsersService extends TypeOrmCrudService<User> {
     return this.repo.save(user);
   }
 
-  /*   public async updateFavorite(idUser: string, favorite: any) {
-      const user = await this.repo.findOne(idUser);
-      let productos: Product[];
-      for (let index = 0; index < favorite.length; index++) {
-        let prod = this.productsService.findOne(favorite.id);
-        productos.push(prod);
-  
-      }
-      user.favorite.push(favorite)
-      return this.repo.save(user);
-    } */
 
   public async updatePassword(credential: CredentialsDto) {
 
-    // const find = credential.email ? credential.email : credential.nroCel;
     let user;
     if (credential.email) {
       user = await this.repo.findOne({ where: { email: credential.email } });
@@ -271,10 +235,7 @@ export class UsersService extends TypeOrmCrudService<User> {
   }
 
   public async updateToken(token: string, idUser: string) {
-    console.log("entro a actualzar token");
-    console.log("token a cargar", token);
-
-
+  
     let user = await this.repo.findOne(idUser);
     console.log("user en service", user);
 

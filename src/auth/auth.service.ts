@@ -4,14 +4,12 @@ import { UsersService } from '../users/user.service';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
 import { User } from '../users/user.entity';
 import { RegistrationStatus } from './interfaces/registrationStatus.interface';
-import { MailerOptions } from '../mailer/mailer.interface';
-import { NodeMailerService } from '../mailer/mailer.service';
 import { LoginUserDto } from './dto/login.dto';
 
 @Injectable()
 export class AuthService {
   constructor(private readonly usersService: UsersService,
-    private readonly mailerService: NodeMailerService) { }
+) { }
 
   private readonly logger = new Logger(AuthService.name);
 
@@ -27,7 +25,7 @@ export class AuthService {
         profilePic: user.profilePic,
         lastAcces: user.lastAccess
       },
-      'Comprartir',
+      'pepito',
       { expiresIn },
     );
     return {
@@ -77,8 +75,6 @@ export class AuthService {
     return resp;
   }
 
-  async sendMail(mailer: MailerOptions) {
-    return await this.mailerService.sendMail(mailer);
-  }
+
 
 }

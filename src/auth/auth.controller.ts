@@ -41,8 +41,7 @@ import { RegistrationResponse } from './interfaces/registartionResponse.interfac
 import { RolsService } from '../rols/rols.service';
 import { CodeDto } from '../code/dto/code.dto';
 import { CodeService } from '../code/code.service';
-import { MailerOptions } from '../mailer/mailer.interface';
-import config from '../mailer/config';
+
 import { CredentialsDto } from './dto/credentials.dto';
 import * as moment from 'moment';
 import { ParamRecoveryDto, NumberRecoveryDto } from './dto/param-recovery.dto';
@@ -78,7 +77,7 @@ const client = require('twilio')(accountSid, authToken);
 @Controller('auth')
 export class AuthController {
     private logger = new Logger('AuthController');
-    private frontEndUrl = process.env.NODE_ENV === 'production' ? 'https://comprartir-staging.tk/' : 'http://localhost:8081/';
+    private frontEndUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8081/';
     constructor(
         private readonly authService: AuthService,
         private readonly usersService: UsersService,
@@ -364,62 +363,7 @@ export class AuthController {
 
     }
 
-    @Get('recovery/:email')
-    @ApiOperation({ summary: 'End point para enviar el email' })
 
-    @ApiOkResponse({ description: 'the email was sent correctly', type: [ParamRecoveryDto], status: 200 })
-    @ApiResponse({ status: 400, description: "bad request" })
-    @ApiResponse({ status: 403, description: "forbidden" })
-    @ApiResponse({ status: 404, description: "Email Not found" })
-    @ApiResponse({ status: 409, description: "Conflict" })
-
-    public async validateMail(@Response() res, @Param() mail: ParamRecoveryDto) {
-        this.logger.log(mail.email);
-        const result = await this.usersService.findByEmail(mail.email);
-        // const codigo = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 6);
-        let codigo = '';
-        const ref = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ0123456789';
-        for (let i = 0; i < 6; i++) {
-            codigo += ref.charAt(Math.floor(Math.random() * ref.length));
-        }
-        const code: CodeDto = {
-            email: mail.email,
-            nroCel: null,
-            code: codigo,
-            validate: false,
-            expiredAt: moment().add(30, 'm').format('YYYY-MM-DD HH:mm'),
-            uso: false,
-        };
-        if (result.success) {
-            try {
-                const mailer: MailerOptions = {
-                    to: mail.email,
-                    from: config.USER,
-                    subject: 'Comprartir codigo de recuperacion de contraseña',
-                    text: 'Tu Codigo de recuperacion de Contraseña es: ' + codigo + 'y la fecha de expiracion de dicho codigo es: ' + code.expiredAt,
-                    // tslint:disable-next-line: max-line-length
-                    html: 'Tu Codigo de recuperacion de Contraseña es: ' + codigo + '. Y la fecha de expiracion de dicho codigo es: ' + code.expiredAt,
-
-                };
-                try {
-                    const mailresp = await this.authService.sendMail(mailer);
-                } catch (error) {
-                    return res.status(HttpStatus.BAD_REQUEST).json({ error, message: 'Ocurrio un error al enviar el mail' });
-                }
-                // tslint:disable-next-line: no-shadowed-variable
-                const result = await this.codeService.saveCode(code);
-                if (!result) {
-                    return res.status(HttpStatus.BAD_REQUEST).json(result);
-                }
-                return res.status(HttpStatus.OK).json('Se guardo el codigo correctamente');
-            } catch (error) {
-                return res.status(HttpStatus.NOT_FOUND).json({ message: 'No se encontre el email' });
-            }
-        } else {
-            return res.status(HttpStatus.NOT_FOUND).json({ error: 'user not exist', message: 'usario no existente' });
-        }
-
-    }
     @Post('validate-code')
     @ApiOperation({ summary: 'Validation the code the recovery the  password' })
     @ApiOkResponse({ description: 'The code has been checked successfully.', type: ValidateResponseDto, status: 200 })

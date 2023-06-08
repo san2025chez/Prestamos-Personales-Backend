@@ -30,47 +30,7 @@ async function bootstrap() {
 
   // Set the config options
   const config = new EnvService().read();
-  const adminConfig: ServiceAccount = {
-    projectId: config.FIREBASE_PROJECT_ID,
-    clientEmail: config.FIREBASE_CLIENT_EMAIL,
-    privateKey: config.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n')
-  };
-  // Initialize the firebase admin app
-  if (!fbase.apps.length) {
-    fbase.initializeApp({
-      credential: fbase.credential.cert(adminConfig),
-      databaseURL: config.FIREBASE_DATABASE_URL,
-    });
-  }
-  console.log("hhh", config.FIREBASE_DATABASE_URL)
-  // Check for firebase initialization
-  // if (!fbase.apps.length) {
-  //   try {
-  //     fbase.initializeApp({
-  //       credential: fbase.credential.cert({
-  //         projectId: ENV.FIREBASE_PROJECT_ID,
-  //         privateKey: ENV.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
-  //         clientEmail: ENV.FIREBASE_CLIENT_EMAIL,
-  //       }),
-  //       databaseURL: ENV.FIREBASE_DATABASE_URL
 
-  //     });
-  //   } catch (error) {
-  //     console.log("error");
-
-  //   }
-
-  // }
-  /*   const adminConfig: ServiceAccount = {
-      "projectId": configService.get<string>('FIREBASE_PROJECT_ID'),
-      "privateKey": configService.get<string>('FIREBASE_PRIVATE_KEY').replace(/\\n/g, '\n'),
-      "clientEmail": configService.get<string>('FIREBASE_CLIENT_EMAIL'),
-    };
-  
-    admin.initializeApp({
-      credential: admin.credential.cert(adminConfig),
-      databaseURL: 
-      }); */
 
   app.use('/doc', basicAuth({
     challenge: true,

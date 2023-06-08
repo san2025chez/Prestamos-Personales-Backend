@@ -28,29 +28,30 @@ export class updateLoanDTO {
 
     @ApiProperty({ required: true, description: 'PROVINCIA' })
     @IsOptional()
-descripcion: string;
+    descripcion: string;
 
+    @ApiProperty({ required: true, description: 'user' })
+    @IsOptional()
+    user: string;
 
-
-@ApiProperty({ required: true, description: 'PROVINCIA' })
-@IsOptional()
-user: string;
-
-@ApiProperty({ required: true, description: 'PROVINCIA' })
-@IsOptional()
-
-date: Date;
-@ApiProperty({ required: true, description: 'PROVINCIA' })
-@IsOptional()
-origen: string;
-@ApiProperty({ required: true, description: 'PROVINCIA' })
-@IsOptional()
-userficticio: string;
-@ApiProperty({ required: true, description: 'PROVINCIA' })
-@IsOptional()
-lastNameficticio: string;
-@ApiProperty({ required: true, description: 'PROVINCIA' })
-@IsOptional()
-createAt: Date;
+    @ApiProperty({ required: true, description: 'PROVINCIA' })
+    @IsOptional()
+    date: Date;
     
+    @ApiProperty({ required: true, description: 'origen' })
+    @IsOptional()
+    origen: string;
+
+    @ApiProperty({ required: true, description: 'userficticio' })
+    @IsOptional()
+    userficticio: string;
+
+    @ApiProperty({ required: true, description: 'lastNamefictico' })
+    @IsOptional()
+    lastNameficticio: string;
+
+    @ApiProperty({ required: true, description: 'Date' })
+    @IsOptional()
+    createAt: Date;
+
 }
