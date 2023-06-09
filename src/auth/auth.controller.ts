@@ -39,13 +39,11 @@ import { SellerService } from '../sellers/seller.service'; */
 import { debuglog } from 'util';
 import { RegistrationResponse } from './interfaces/registartionResponse.interface';
 import { RolsService } from '../rols/rols.service';
-import { CodeDto } from '../code/dto/code.dto';
-import { CodeService } from '../code/code.service';
+
 
 import { CredentialsDto } from './dto/credentials.dto';
 import * as moment from 'moment';
 import { ParamRecoveryDto, NumberRecoveryDto } from './dto/param-recovery.dto';
-import { ValidateDto } from '../code/dto/validateDto.dto';
 import { ValidateResponseDto } from './dto/responseDto.dto';
 import { ValidateMailDto } from './dto/param-validate-mail.dto';
 
@@ -56,9 +54,6 @@ import { ClienteDto } from 'src/users/dto/cliente.dto';
 import { RegistrationCliente } from './interfaces/registrationCliente';
 
 
-const accountSid = 'AC8a6ee19f6694c37a1e379a8f7b7c661c';
-const authToken = 'b5cc5a6563277252815d8743c65b9c6d';
-const client = require('twilio')(accountSid, authToken);
 
 @Crud({
     model: {
@@ -81,11 +76,8 @@ export class AuthController {
     constructor(
         private readonly authService: AuthService,
         private readonly usersService: UsersService,
-        /*   private readonly customerService: CustomerService,
-          private readonly sellerService: SellerService,*/
         private readonly rolsService: RolsService,
-        private readonly codeService: CodeService
-        // private readonly commerceService: CommerceService
+   
 
     ) { }
 
@@ -113,90 +105,6 @@ export class AuthController {
     }
 
 
-    /*     @Post('register/customer')
-        @ApiOperation({ summary: 'Register account the customer', description: 'Register account the customer' })
-        @ApiCreatedResponse({ description: 'The Account has been successfully created.', type: CustomerDto, status: 200 })
-    
-        @ApiResponse({ status: 400, description: "Bad Request" })
-        @ApiResponse({ status: 403, description: "The logged user has no rights" })
-        @ApiResponse({ status: 404, description: "'The resource was not found'" })
-        @ApiResponse({ status: 409, description: "Conflict" })
-        @ApiResponse({ status: 500, description: "Internal server error" })
-    
-        @ApiBody({ type: CustomerDto })
-    
-        public async registerCustomer(@Response() res, @Body() customerDto: CustomerDto): Promise<LoginResponseDto> {
-            let response: LoginResponseDto = {
-                success: true,
-                message: 'customer regitered',
-            };
-            try {
-                const resp = await this.customerService.findUser(customerDto.userId);
-                if (resp.success) {
-                    // tslint:disable-next-line: no-shadowed-variable
-                    const response: LoginResponseDto = {
-                        success: true,
-                        message: 'customer already exist',
-                    };
-                    return res.status(HttpStatus.OK).json(response);
-                } else {
-                    // tslint:disable-next-line: no-shadowed-variable
-                    const resp = await this.usersService.findById(customerDto.userId);
-                    const rol = await this.rolsService.findRol({ name: 'customer' });
-                    await this.customerService.saveCustomer(resp.user);
-                    await this.usersService.updateUser(resp.user, rol);
-                }
-            } catch (err) {
-                debuglog(err);
-                response = { success: false, message: err };
-            }
-            return res.status(HttpStatus.OK).json(response);
-        }
-    
-        @Post('register/seller')
-        @ApiOperation({ summary: 'Registra cuenta de Seller' })
-    
-        @ApiCreatedResponse({ description: 'The Account has been successfully created.', type: SellerDto, status: 200 })
-        @ApiResponse({ status: 400, description: "Bad Request" })
-        @ApiResponse({ status: 403, description: "The logged user has no rights" })
-        @ApiResponse({ status: 404, description: "'The resource was not found'" })
-        @ApiResponse({ status: 409, description: "Conflict" })
-        @ApiResponse({ status: 500, description: "internal server error" })
-    
-        @ApiResponse({ description: 'Internal error server', status: 500 })
-    
-        @ApiBody({ type: SellerDto })
-        public async registerSeller(@Response() res, @Body() sellerDto: SellerDto): Promise<LoginResponseDto> {
-            let response: LoginResponseDto = {
-                success: true,
-                message: 'seller regitered',
-            };
-            try {
-                const resp = await this.sellerService.findUser(sellerDto.userId);
-                if (resp.success) { */
-    // tslint:disable-next-line: no-shadowed-variable
-    /*       const response: LoginResponseDto = {
-              success: true,
-              message: 'seller already exist',
-          };
-          return res.status(HttpStatus.OK).json(response);
-      } else { */
-    // tslint:disable-next-line: no-shadowed-variable
-    /*    const resp = await this.usersService.findById(sellerDto.userId);
-       const rol = await this.rolsService.findRol({ name: 'seller' });
-       await this.sellerService.saveSeller(resp.user);
-       await this.usersService.updateUser(resp.user, rol); */
-    /* if (sellerDto.commerce) {
-        await this.commerceService.saveCommerce(sellerDto.commerce)
-    } */
-    /*         }
-        } catch (err) {
-            debuglog(err);
-            response = { success: false, message: err };
-        }
-        return res.status(HttpStatus.OK).json(response);
-    } */
-
     @Post('register')
     @ApiOperation({ summary: 'Registra una cuenta' })
     @ApiCreatedResponse({ description: 'The Account has been successfully created.', type: ClienteDto })
@@ -208,10 +116,7 @@ export class AuthController {
     @ApiBody({ type: ClienteDto })
     public async register(@Response() res, @Body() userDto: ClienteDto) {
         try {
-          
-         
-          
-                const rol = await this.rolsService.findRol({ name: 'customer' });
+               const rol = await this.rolsService.findRol({ name: 'customer' });
                 console.log("INGRESO AL BBBBBACK",userDto);
                 const user = await this.usersService.registerCliente(userDto);
                 console.log("el user creado es",user);
@@ -363,154 +268,4 @@ export class AuthController {
 
     }
 
-
-    @Post('validate-code')
-    @ApiOperation({ summary: 'Validation the code the recovery the  password' })
-    @ApiOkResponse({ description: 'The code has been checked successfully.', type: ValidateResponseDto, status: 200 })
-    @ApiResponse({ status: 400, description: "Bad Request" })
-    @ApiResponse({ status: 403, description: "ProhibidoForbidden" })
-    @ApiResponse({ status: 404, description: "Not found" })
-    @ApiResponse({ status: 409, description: "Conflict" })
-    @ApiResponse({ status: 500, description: "internal server error" })
-    @ApiBody({ type: ValidateDto })
-    public async validateCode(@Response() res, @Body() validate: ValidateDto) {
-        const resp = await this.codeService.validateMailandCodigo(validate);
-        if (!resp.succeses) {
-            res.status(HttpStatus.BAD_REQUEST).json({ ...resp, message: ' mail or code invalid, o code has expired' });
-        } else {
-            await this.codeService.actualizarCodigo(resp.code);
-            return res.status(HttpStatus.OK).json({ ...resp, message: ' el codigo se valido con exito' });
-        }
-    }
-
-    @Post('change-password')
-    @ApiOperation({ summary: 'Cambiar contraseña' })
-    @ApiCreatedResponse({ description: 'The password has been successfully change.', type: CredentialsDto, status: 200 })
-    @ApiBadRequestResponse({ description: 'Contraseña distintas' })
-    @ApiResponse({ status: 400, description: "password different" })
-    @ApiResponse({ status: 403, description: "ProhibidoForbidden" })
-    @ApiResponse({ status: 404, description: "Not found" })
-    @ApiResponse({ status: 409, description: "Conflict" })
-    @ApiResponse({ status: 500, description: "internal server error" })
-    @ApiBody({ type: CredentialsDto })
-    public async changuePass(@Response() res, @Body() credentials: CredentialsDto) {
-        const resp = await this.codeService.findOne(credentials.codeID);
-        console.log('resp find code: ', resp);
-        /*  const validate = {
-             email: credentials.email,
-             nroCel: credentials.nroCel,
-             code: credentials.code
-         } as ValidateDto */
-        const respuesta = await this.codeService.validateMailandCodigo(credentials as unknown as ValidateDto);
-        if ((credentials.pass === credentials.repeatPass)) {
-            if (resp && resp.validate === true && resp.uso === false) {
-                await this.usersService.updatePassword(credentials);
-                await this.codeService.actualizarUsoCodigo(respuesta.code);
-                return res.status(HttpStatus.OK).json({ message: 'se cambio la contraseña con exito' });
-            } else {
-                return res.status(HttpStatus.NOT_FOUND).json({ message: 'Error al cambiar la contraseña, codigo no valido o codigo ya usado' });
-            }
-            // return res.status(HttpStatus.OK).json({message: 'se cambio la contraseña con exito'});
-        } else {
-            return res.status(HttpStatus.BAD_REQUEST).json({ message: 'Error: Contraseña distintas' });
-        }
-    }
-
-    @Get('validate-email/:email')
-    @ApiOperation({ summary: 'End point para validar email' })
-    @ApiOkResponse({ description: 'Email existe.', status: 200 })
-    @ApiResponse({ status: 400, description: "Bad Request" })
-    @ApiResponse({ status: 403, description: "Forbidden" })
-    @ApiResponse({ status: 404, description: "Not found" })
-    @ApiResponse({ status: 409, description: "Conflict" })
-    @ApiResponse({ status: 500, description: "internal server error" })
-    public async validateEmail(@Response() res, @Param() param: ValidateMailDto) {
-        const result = await this.usersService.findByEmailForValidate(param.email);
-        if (result) {
-            return res.status(HttpStatus.OK).json({
-                validate: true,
-            });
-        } else {
-            return res.status(HttpStatus.NOT_FOUND).json({
-                statusCode: 404,
-                error: 'email_not_found',
-                message: 'Email not found',
-            });
-        }
-    }
-
-    /* @Get('validate-nickname/:nickname')
-    @ApiOperation({ summary: 'End point para validations nickName' })
-    @ApiResponse({ description: 'nickName existe.', status: 200 })
-    @ApiResponse({ status: 400, description: "Bad Request" })
-    @ApiResponse({ status: 403, description: "Forbidden" })
-    @ApiResponse({ status: 404, description: "nickName Not found" })
-    @ApiResponse({ status: 409, description: "Conflict" })
-    @ApiResponse({ status: 500, description: "internal server error" })
-    public async validateNick(@Response() res, @Param('nickname') nickname: any) {
-        const result = await this.usersService.findByNickName(nickname);
-        if (result) {
-            return res.status(HttpStatus.OK).json({
-                validate: true,
-            });
-        } else {
-            return res.status(HttpStatus.NOT_FOUND).json({
-                statusCode: 404,
-                error: 'nickname_not_found',
-                message: 'Nickname not found',
-            });
-        }
-    } */
-
-
-    @Get('recovery/sms/:nroCel')
-    @ApiOperation({ summary: 'End point para enviar el numero' })
-    @ApiResponse({ description: 'the sms was sent successfully.', status: 200 })
-    @ApiResponse({ status: 400, description: "Bad Request" })
-    @ApiResponse({ status: 403, description: "Forbidden" })
-    @ApiResponse({ status: 404, description: "number Not found" })
-    @ApiResponse({ status: 409, description: "Conflict" })
-    @ApiResponse({ status: 500, description: "internal server error" })
-    public async validateNumber(@Response() res, @Param() numberRecovery: NumberRecoveryDto) {
-        this.logger.log(numberRecovery.nroCel);
-        const result = await this.usersService.findByNumCel(numberRecovery.nroCel);
-        console.log('nro de recuperacion: ', numberRecovery.nroCel);
-        console.log('encontro el usuario?: ', result);
-        // const codigo = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 6);
-        let codigo = '';
-        const ref = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ0123456789';
-        for (let i = 0; i < 6; i++) {
-            codigo += ref.charAt(Math.floor(Math.random() * ref.length));
-        }
-        const code: CodeDto = {
-            email: null,
-            nroCel: numberRecovery.nroCel,
-            code: codigo,
-            validate: false,
-            expiredAt: moment().add(30, 'm').format('YYYY-MM-DD HH:mm'),
-            uso: false,
-        };
-
-        if (result.success) {
-            client.messages
-                .create({
-                    body: 'codigo de restablecimiento de contraseña: ' + codigo,
-                    from: '+12054489977',
-                    to: numberRecovery.nroCel,
-                })
-                .then(message => {
-                    // tslint:disable-next-line: semicolon
-                    console.log(message.sid)
-                    const result = this.codeService.saveCode(code);
-                    return res.status(HttpStatus.OK).json('Se guardo el codigo correctamente');
-                })
-                .then(err => {
-                    console.log('error: ', err);
-                    return res.status(HttpStatus.BAD_REQUEST).json({ err, message: 'Ocurrio un error al enviar el sms' });
-                });
-        } else {
-            return res.status(HttpStatus.NOT_FOUND).json({ error: 'user not exist', message: 'usario no existente' });
-        }
-
-    }
 }

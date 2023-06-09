@@ -6,10 +6,6 @@ import { AuthModule } from './auth/auth.module';
 
 import { RolsModule } from './rols/rols.module';
 import { PermissionsModule } from './permissions/permissions.module';
-
-import { CodeModule } from './code/code.module';
-
-
 import { DatabaseModule } from './database/database.module';
 
 import { PrestamoService } from './prestamo/prestamo.service';
@@ -27,7 +23,6 @@ import { PrestamoModule } from './prestamo/prestamo.module';
     PrestamoModule,
     RolsModule,
     PermissionsModule,
-    CodeModule,
     PrestamoModule,
   ],
   controllers: [],

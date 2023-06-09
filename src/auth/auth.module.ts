@@ -5,18 +5,12 @@ import { User } from "../users/user.entity";
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { LocalStrategy } from '../auth/passport/local.strategy';
 import { UsersModule } from '../users/user.module';
-
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from '../auth/passport/jwt.strategy';
 import { GoogleStrategy } from './passport/google.strategy';
 import { RolsService } from '../rols/rols.service';
 import { RolsModule } from '../rols/rols.module';
-import { CodeModule } from '../code/code.module';
-
-
-
-
 
 @Module({
   imports: [
@@ -26,7 +20,7 @@ import { CodeModule } from '../code/code.module';
     /* CustomersModule,
     SellerModule, */
     PassportModule,
-    CodeModule,
+
 
     JwtModule.register({
       secret: 'pepito',
