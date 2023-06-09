@@ -10,7 +10,7 @@ Antes de comenzar con la instalación y configuración del sistema, asegúrate d
 
 Node.js (versión 10 o superior)
 npm (administrador de paquetes de Node.js)
-Base de datos (por ejemplo, MySQL, PostgreSQL o MongoDB) y sus credenciales de conexión.
+Base de datos PostgreSQL y sus credenciales de conexión.
 Instalación
 Sigue estos pasos para instalar y ejecutar el sistema de registro de préstamos personales con empeño:
 
