@@ -40,7 +40,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
                             email: profile.emails[0].value,
                            /*  password:  Math.random().toString(36).slice(-8), */ // password aleeatorio
                         } as UserDto;
-                    user = await this.userService.register(userRegistered);
+                    user = await this.userService.registerUser(userRegistered);
                 } catch (error) {
                     done(error, false);
                 }

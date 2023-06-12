@@ -45,10 +45,8 @@ export class PrestamoController {
     ) { }
 
     @Post('register')
-    // @UseGuards(AuthGuard('jwt'), PermissionGuard)
-    // @Permision('seller')
-    @ApiOperation({ summary: 'Registra un producto en un commercio' })
-    @ApiCreatedResponse({ description: 'The product has been successfully created.', type: PrestamoDto })
+    @ApiOperation({ summary: 'Registra un loano en un commercio' })
+    @ApiCreatedResponse({ description: 'The loan has been successfully created.', type: PrestamoDto })
     @ApiBody({ type: PrestamoDto })
     @ApiResponse({ status: 200, description: 'data returned correctly' })
     @ApiResponse({ status: 403, description: 'Forbidden.' })
@@ -57,78 +55,55 @@ export class PrestamoController {
     @ApiResponse({ status: 409, description: 'Conflict' })
     @ApiResponse({ status: 500, description: 'Internal Server Error.' })
 
-    public async savePrestamo(@Response() res, @Body() createProductDto: PrestamoDto): Promise<any> {
-        console.log('body create product: ', createProductDto);
+    public async createLoan(@Response() res, @Body() createLoanDto: PrestamoDto): Promise<any> {
 
         try {
-            let userfull = await this.serviceUser.findOne(createProductDto.user);
+            let userfull = await this.serviceUser.findOne(createLoanDto.user);
 
           
             if (userfull) {
                 let loanSave = {
-                    user:userfull.id,
-                    monto: createProductDto.monto,
-                    interes: createProductDto.interes,
-                    montoTotal: createProductDto.montoTotal,
-                  prenda: createProductDto.prenda,
-                  descripcion: createProductDto.descripcion,
+                  user:userfull.id,
+                  monto: createLoanDto.monto,
+                  interes: createLoanDto.interes,
+                  montoTotal: createLoanDto.montoTotal,
+                  prenda: createLoanDto.prenda,
+                  descripcion: createLoanDto.descripcion,
                   userficticio: userfull.firstName,
                   lastNameficticio: userfull.lastName
                    
                 }
-               /*  if(loanSave){
-                    var loan: LoanDto={
-                        user:userfull,
-                        monto: loanSave.monto,
-                        interes:loanSave.interes,
-                        montoTotal: loanSave.montoTotal,
-                      prenda: loanSave.prenda,
-                      descripcion: loanSave.descripcion,
-                       
-                    }
-                } */
-                
 
-                console.log('producto a guardar: ', loanSave);
+                const loan = await this.service.createLoan(loanSave);
 
-                       
-
-                const product = await this.service.savePrestamo(loanSave);
-
-                //no devuelve commerce upadate
-             
-                return res.status(HttpStatus.OK).json(product);
+                return res.status(HttpStatus.OK).json(loan);
             } else {
-                return res.status(HttpStatus.BAD_REQUEST).json({ message: 'comercio o tipo de producto no encontrados' });
+                return res.status(HttpStatus.BAD_REQUEST).json({ message: 'comercio o tipo de loano no encontrados' });
             }
 
         } catch (error) {
-            console.log('error al crear producto: ', error);
-            return res.status(HttpStatus.BAD_REQUEST).json({ message: 'ocurrio un error al guardar el producto', error });
+         
+            return res.status(HttpStatus.BAD_REQUEST).json({ message: 'ocurrio un error al guardar el loano', error });
         }
     }
 
 
     @Get()
-
-
-    /* @UseGuards(AuthGuard('jwt')) */
     @ApiResponse({ status: 200, description: 'data returned correctly' })
     @ApiResponse({ status: 403, description: 'Forbidden.' })
     @ApiResponse({ status: 400, description: 'Bad Request' })
     @ApiResponse({ status: 404, description: '\'The resource was not found\'' })
     @ApiResponse({ status: 409, description: 'Conflict' })
     @ApiResponse({ status: 500, description: 'Internal Server Error.' })
-    public async getProducts(@Response() res): Promise<any> {
-        const products = await this.service.getProducts();
-        return res.status(HttpStatus.OK).json(products);
+    public async getloans(@Response() res): Promise<any> {
+        const loans = await this.service.getLoans();
+        return res.status(HttpStatus.OK).json(loans);
     }
 
 
 
     @Put('/editLoan/:id')
-    public async putProducts(@Response() res, @Param() param, @Body() createLoanDto: updateLoanDTO): Promise<any> {
-    console.log("ingreso a modificar");
+    public async updateLoan(@Response() res, @Param() param, @Body() createLoanDto: updateLoanDTO): Promise<any> {
     
         try {
 
@@ -143,7 +118,6 @@ export class PrestamoController {
                     montoTotal: createLoanDto.montoTotal,   
                     prenda: createLoanDto.prenda,
                     descripcion: createLoanDto.descripcion,
-                
                     user: createLoanDto.user,
                     date:createLoanDto.date,
                     origen:createLoanDto.origen,
@@ -151,17 +125,17 @@ export class PrestamoController {
                     lastNameficticio: createLoanDto.lastNameficticio,
                     createAt: createLoanDto.createAt,
                 }
-console.log("compruebo",loanMod);
 
-                const producto = await this.service.updateLoan(loanMod);
-                return res.status(HttpStatus.OK).json(producto);
+
+                const loano = await this.service.updateLoan(loanMod);
+                return res.status(HttpStatus.OK).json(loano);
             } else {
                 return res.status(HttpStatus.BAD_REQUEST).json({ message: ' loan no encontrados' });
             }
 
         } catch (error) {
-            console.log('error al modifcar producto: ', error);
-            return res.status(HttpStatus.BAD_REQUEST).json({ message: 'ocurrio un error al guardar el producto', error });
+            console.log('error al modifcar loano: ', error);
+            return res.status(HttpStatus.BAD_REQUEST).json({ message: 'ocurrio un error al guardar el loano', error });
 
         }
 }
@@ -172,7 +146,7 @@ console.log("compruebo",loanMod);
 @ApiResponse({ status: 404, description: '\'The resource was not found\'' })
 @ApiResponse({ status: 409, description: 'Conflict' })
 @ApiResponse({ status: 500, description: 'Internal Server Error.' })
-public async deleteProducts(@Response() res, @Param() param): Promise<any> {
+public async deleteLoan(@Response() res, @Param() param): Promise<any> {
     await this.service.deleteLoan(param.id);
     return res.status(HttpStatus.OK).json({ message: 'loan deleted' });
 }

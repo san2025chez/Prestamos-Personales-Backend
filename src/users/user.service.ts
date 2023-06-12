@@ -22,7 +22,7 @@ export class UsersService extends TypeOrmCrudService<User> {
   }
 
 
-  public async getUsuarioById(id: string): Promise<any> {
+  public async getUserById(id: string): Promise<any> {
     console.log('ido user service: ', id);
     let usuario = await this.repo.findOne(id, { relations: ['rols'] });
     console.log('comerce find: ', usuario);
@@ -34,7 +34,7 @@ export class UsersService extends TypeOrmCrudService<User> {
     return await this.repo.findOne(id, { relations: ['rols'] });
   }
 
-  public async findByEmail(userEmail: string): Promise<RegistrationStatus> {
+  public async findUserByEmail(userEmail: string): Promise<RegistrationStatus> {
     const status: RegistrationStatus = {
       success: false,
       message: 'user not found',
@@ -61,7 +61,7 @@ export class UsersService extends TypeOrmCrudService<User> {
 
   }
 
-  public async findByNumCel(nroCel: string): Promise<RegistrationStatus> {
+  public async findUserByNumCel(nroCel: string): Promise<RegistrationStatus> {
     const status: RegistrationStatus = {
       success: false,
       message: 'user not found',
@@ -117,15 +117,15 @@ export class UsersService extends TypeOrmCrudService<User> {
     }
   }
 
-  public async findByNickName(nickName: string): Promise<User> {
+  public async findUserByNickName(nickName: string): Promise<User> {
     return await this.repo.findOne({ nickName });
   }
 
-  public async findByEmailForValidate(email: string): Promise<User> {
+  public async findUserByEmailForValidate(email: string): Promise<User> {
     return await this.repo.findOne({ email });
   }
 
-  public async findById(id: string): Promise<RegistrationStatus> {
+  public async findUserById(id: string): Promise<RegistrationStatus> {
     console.log('id a buscar: ', id);
 
     const user = await this.repo.findOne(id);
@@ -140,7 +140,7 @@ export class UsersService extends TypeOrmCrudService<User> {
 
   }
 
-  public async register(userDto: UserDto): Promise<UserDto> {
+  public async registerUser(userDto: UserDto): Promise<UserDto> {
 
     const { email } = userDto;
     let user = await this.repo.findOne({ where: { email } });

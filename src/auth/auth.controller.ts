@@ -32,10 +32,6 @@ import { UserDto } from '../users/dto/user.dto';
 import { LoginUserDto } from './dto/login.dto';
 import { LoginResponseDto } from './dto/response.dto';
 import { AuthGuard } from '@nestjs/passport';
-/* import { CustomerService } from '../customers/customer.service';
-import { CustomerDto } from '../customers/dto/customer.dto';
-import { SellerDto } from '../sellers/dto/seller.dto';
-import { SellerService } from '../sellers/seller.service'; */
 import { debuglog } from 'util';
 import { RegistrationResponse } from './interfaces/registartionResponse.interface';
 import { RolsService } from '../rols/rols.service';
@@ -152,7 +148,7 @@ export class AuthController {
     @ApiBody({ type: UserDto })
     public async registerAdmin(@Response() res, @Body() userDto: UserDto) {
         try {
-            const resp = await this.usersService.findByEmail(userDto.email);
+            const resp = await this.usersService.findUserByEmail(userDto.email);
             if (resp.success) {
                 const response: RegistrationResponse = {
                     success: false,
@@ -163,7 +159,7 @@ export class AuthController {
             } else {
                 const rol = await this.rolsService.findRol({ name: 'admin' });
                 //userDto.rols = rol;
-                const user = await this.usersService.register(userDto);
+                const user = await this.usersService.registerUser(userDto);
 
 
                 const users = await this.usersService.updateUser(user, rol);
@@ -191,7 +187,7 @@ export class AuthController {
             console.log("id a buscar", param.id);
 
 
-            let user2 = await this.usersService.findById(param.id);
+            let user2 = await this.usersService.findUserById(param.id);
             console.log("user encontrado", user2);
 
             const userUpdate = await this.usersService.updateToken(userDto.firebaseRegistrationToken, param.id);

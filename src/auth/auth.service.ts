@@ -38,7 +38,7 @@ export class AuthService {
     return await this.usersService.getUserValidateToken(payload.id);
   }
   async validateUser(email: string, password: string): Promise<any> {
-    const resp = await this.usersService.findByEmail(email);
+    const resp = await this.usersService.findUserByEmail(email);
     if (resp.user && resp.user.comparePassword(password)) {
       this.logger.log('password check success');
       // tslint:disable-next-line: no-shadowed-variable
@@ -49,7 +49,7 @@ export class AuthService {
   }
 
   async findUserByMail(email: string): Promise<any> {
-    return await this.usersService.findByEmail(email);
+    return await this.usersService.findUserByEmail(email);
   }
 
   async validateNickEmail(nickEmail: string): Promise<any> {
@@ -58,7 +58,7 @@ export class AuthService {
         success: true,
         message: 'nick or email is disposition',
       };
-      const user = await this.usersService.findByEmail(nickEmail);
+      const user = await this.usersService.findUserByEmail(nickEmail);
       if (user) {
         status = { success: false, message: 'El nickname or email already exist' };
       }

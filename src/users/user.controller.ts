@@ -84,7 +84,7 @@ export class UsersController {
     @ApiResponse({ status: 409, description: "Conflict" })
     @ApiResponse({ status: 500, description: "internal server error" })
     @ApiBody({ type: ClienteDto })
-    public async register(@Response() res, @Body() userDto: ClienteDto) {
+    public async registerUser(@Response() res, @Body() userDto: ClienteDto) {
         try {
           
          
@@ -163,9 +163,9 @@ export class UsersController {
     @ApiResponse({ status: 200, description: 'Los datos han sido devueltos correctamente.' })
     @ApiResponse({ status: 403, description: 'Forbidden.' })
     @ApiResponse({ status: 500, description: 'Internal Server Error.' })
-    public async getCommerce(@Response() res, @Param() param): Promise<any> {
+    public async getUser(@Response() res, @Param() param): Promise<any> {
         console.log("Id del usuario a buscar",param.userId)
-        const user = await this.service.getUsuarioById(param.userId);
+        const user = await this.service.getUserById(param.userId);
         console.log(user);
 
         return res.status(HttpStatus.OK).json(user);
@@ -178,7 +178,7 @@ export class UsersController {
     @ApiResponse({ status: 404, description: '\'The resource was not found\'' })
     @ApiResponse({ status: 409, description: 'Conflict' })
     @ApiResponse({ status: 500, description: 'Internal Server Error.' })
-    public async deleteProducts(@Response() res, @Param() param): Promise<any> {
+    public async deleteUser(@Response() res, @Param() param): Promise<any> {
         await this.service.deleteUser(param.id);
         return res.status(HttpStatus.OK).json({ message: 'product deleted' });
     }
@@ -201,7 +201,7 @@ export class UsersController {
     @ApiConflictResponse({ description: 'conflict with password form', status: 409, type: ErrorChangePassDto })
     @ApiResponse({ status: 500, description: "internal server error" })
     @ApiBody({ type: ChangePassDto })
-    public async ChangePassword(@Response() res, @Param() param: ParamsUserDto, @Body() changePassDto: ChangePassDto) {
+    public async ChangePasswordUser(@Response() res, @Param() param: ParamsUserDto, @Body() changePassDto: ChangePassDto) {
         try {
             const resUser = await this.service.findOne({ id: param.userId });
             if (resUser) {
