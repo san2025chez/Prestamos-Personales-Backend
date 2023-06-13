@@ -19,6 +19,18 @@ git clone <URL_DEL_REPOSITORIO>
 
 ```
 
+#API
+
+1.clonar Proyecto
+2. ```yarn install```
+3. Clonar el archivo ```.env.template``` y renombrarlo a ```.env```
+4.Cambiar la variable de entorno
+5.Levantar la  base de datos
+
+```
+docker-compose up -d
+``
+
 ## Installation
 
 ```bash
